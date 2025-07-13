@@ -1,11 +1,14 @@
 import { refs } from './js/refs';
-import { saveInLs } from './js/local-storage-api';
-// import { addTask } from './js/tasks';
+import { addTask, getTasks } from './js/tasks';
+import { deleteTask } from './js/tasks';
 
-const tasks = [];
+getTasks();
 
 refs.form.addEventListener('submit', event => {
   event.preventDefault();
+
+  // const title = refs.form.elements["taskName"].value.trim();
+  // const description = refs.form.elements['taskDescription'].value.trim();
 
   const title = refs.taskName.value.trim();
   const description = refs.taskDescription.value.trim();
@@ -13,36 +16,24 @@ refs.form.addEventListener('submit', event => {
   const task = {};
 
   if (!title || !description) {
-    alert('Inputs are empty!');
+    alert('Заповніть усі поля!');
     return;
-  } else {
-    task.title = title;
-    task.description = description;
   }
+  task.title = title;
+  task.description = description;
 
-  tasks.push(task);
+  addTask(task);
 
-  // console.log(title);
-  // console.log(description);
-  console.log(tasks);
-  // {title, description}
-  // addTask({ title, description });
-
-  // tasks.map(item => {
-  //   const markItem = `
-  //   <li class="task-list-item">
-  //     <button class="task-list-item-btn">
-  //       Delete
-  //     </button>
-  //     <h3>${item.title}</h3>
-  //     <p>${item.description}</p>
-  //   </li>`;
-  //   refs.list.insertAdjacentHTML('beforeend', markItem);
-  // });
-
-  tasks.map(item => {
-    saveInLs(item.title, item.description);
-  });
+  refs.form.reset();
 });
 
-export default tasks;
+refs.list.addEventListener('click', event => {
+  event.preventDefault();
+  // const textTitle = event.target.nextElementSibling.textContent || '';
+  const nextElement = event.target.nextElementSibling;
+  const textTitle = nextElement ? nextElement.textContent || '' : '';
+  const nextNextElement = nextElement ? nextElement.nextElementSibling : null;
+  const textDeskr = nextNextElement ? nextNextElement.textContent || '' : '';
+
+  deleteTask(textTitle, textDeskr);
+});
