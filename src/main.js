@@ -1,16 +1,48 @@
-/*
-  Створи список справ.
-  На сторінці є два інпути які має вводиться назва і текст задачі.
-  Після натискання на кнопку "Add" завдання додається до списку #task-list.
+import { refs } from './js/refs';
+import { saveInLs } from './js/local-storage-api';
+// import { addTask } from './js/tasks';
 
-  У кожної картки має бути кнопка "Delete", щоб можна було
-  прибрати завдання зі списку.
-  Список із завданнями має бути доступним після перезавантаження сторінки.
+const tasks = [];
 
-  Розмітка картки задачі
-  <li class="task-list-item">
-      <button class="task-list-item-btn">Delete</button>
-      <h3>Заголовок</h3>
-      <p>Текст</p>
-  </li>
-*/
+refs.form.addEventListener('submit', event => {
+  event.preventDefault();
+
+  const title = refs.taskName.value.trim();
+  const description = refs.taskDescription.value.trim();
+
+  const task = {};
+
+  if (!title || !description) {
+    alert('Inputs are empty!');
+    return;
+  } else {
+    task.title = title;
+    task.description = description;
+  }
+
+  tasks.push(task);
+
+  // console.log(title);
+  // console.log(description);
+  console.log(tasks);
+  // {title, description}
+  // addTask({ title, description });
+
+  // tasks.map(item => {
+  //   const markItem = `
+  //   <li class="task-list-item">
+  //     <button class="task-list-item-btn">
+  //       Delete
+  //     </button>
+  //     <h3>${item.title}</h3>
+  //     <p>${item.description}</p>
+  //   </li>`;
+  //   refs.list.insertAdjacentHTML('beforeend', markItem);
+  // });
+
+  tasks.map(item => {
+    saveInLs(item.title, item.description);
+  });
+});
+
+export default tasks;
